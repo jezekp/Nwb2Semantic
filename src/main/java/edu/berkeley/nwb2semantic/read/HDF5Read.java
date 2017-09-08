@@ -12,36 +12,28 @@
  * help@hdfgroup.org.                                                        *
  ****************************************************************************/
 
-package edu.berkeley.nwb2semantic;
+package edu.berkeley.nwb2semantic.read;
 
+import edu.berkeley.nwb2semantic.data.*;
 import ncsa.hdf.object.*;
+import ncsa.hdf.object.Attribute;
+import ncsa.hdf.object.Dataset;
+import ncsa.hdf.object.Group;
 import ncsa.hdf.object.h5.H5File;
 import ncsa.hdf.object.h5.H5Group;
+import ncsa.hdf.object.h5.H5ScalarDS;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Created by petr-jezek on 7.9.17*
  * <p>
- * Title: HDF Object Package (Java) Example
- * </p>
- * <p>
- * Description: this example shows how to read/write HDF datasets using the
- * "HDF Object Package (Java)". The example creates an integer dataset, and read
- * and write data values:
- *
- * <pre>
- *     "/" (root)
- *             2D 32-bit integer 20x10
- * </pre>
- *
- * </p>
- *
- * @author Peter X. Cao
- * @version 2.4
+ * jezekp@kiv.zcu.cz
  */
-public class H5DatasetRead {
+public class HDF5Read {
 
-    public void read(String fname) throws Exception {
+    public edu.berkeley.nwb2semantic.data.Group read(String fname) throws Exception {
         // create the file and add groups and dataset into the file
 
 
@@ -63,33 +55,52 @@ public class H5DatasetRead {
         testFile.open();
         Group root = (Group) ((javax.swing.tree.DefaultMutableTreeNode) testFile.getRootNode()).getUserObject();
 
-browseFile(root);
+        edu.berkeley.nwb2semantic.data.Group out = new edu.berkeley.nwb2semantic.data.Group();
+        browseFile(root, out);
 
 
         // close file resource
         testFile.close();
+        return out;
     }
 
-    public void browseFile(Group item) throws Exception {
+    protected void browseFile(Group node, edu.berkeley.nwb2semantic.data.Group outGroup) throws Exception {
 
-        List dataset =  item.getMemberList();
+        List members = node.getMemberList();
 
-        for(Object i : dataset) {
+        for (Object member : members) {
 
-            if(i instanceof H5Group) {
-                Group group = (Group) i;
-                List metadata = group.getMetadata();
-                for(Object m : metadata) {
-                    System.out.println("metadata: " + m);
-                }
+            if (member instanceof Group) {
+                edu.berkeley.nwb2semantic.data.Group tmp = new edu.berkeley.nwb2semantic.data.Group();
+                Group group = (Group) member;
+                tmp.setName(group.getName());
+                outGroup.getSubgroups().add(tmp);
+                tmp.setAttributes(createMetadata(group.getMetadata()));
 
-                browseFile(group);
+
+                browseFile(group, tmp);
 
             }
+            if (member instanceof Dataset) {
+                Dataset dataset = (Dataset) member;
+                edu.berkeley.nwb2semantic.data.Dataset tmp = new edu.berkeley.nwb2semantic.data.Dataset();
+                tmp.setName(dataset.getName());
+                outGroup.getDatasets().add(tmp);
 
-            System.out.print( "/"  + item);
+
+            }
         }
-        System.out.println();
+    }
+
+    private List<edu.berkeley.nwb2semantic.data.Attribute> createMetadata(List<Attribute> attributes) {
+        List<edu.berkeley.nwb2semantic.data.Attribute> res = new LinkedList<edu.berkeley.nwb2semantic.data.Attribute>();
+        for (Attribute item : attributes) {
+            edu.berkeley.nwb2semantic.data.Attribute tmp = new edu.berkeley.nwb2semantic.data.Attribute();
+            tmp.setName(item.getName());
+            res.add(tmp);
+        }
+        return res;
+
     }
 
 

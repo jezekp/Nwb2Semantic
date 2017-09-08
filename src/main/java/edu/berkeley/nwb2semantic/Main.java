@@ -1,8 +1,13 @@
 package edu.berkeley.nwb2semantic;
 
-import ncsa.hdf.hdf5lib.HDF5Constants;
-import ncsa.hdf.object.FileFormat;
-import ncsa.hdf.object.h5.H5File;
+import edu.berkeley.nwb2semantic.read.HDF5Read;
+import ncsa.hdf.object.Group;
+import tools.JenaBeanExtensionTool;
+import tools.Syntax;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by petr-jezek on 7.9.17*
@@ -17,9 +22,28 @@ public class Main {
         String file = "/home/petr-jezek/Data/nwb_datasets/nwbMatlab_DG/ANM184389_20130207.nwb";
 
 
-        H5DatasetRead h5DatasetRead = new H5DatasetRead();
+        HDF5Read h5DatasetRead = new HDF5Read();
         try {
-            h5DatasetRead.read(file);
+            edu.berkeley.nwb2semantic.data.Group root = h5DatasetRead.read(file);
+
+            List<Object> resList = new ArrayList<Object>();
+            resList.add(root);
+
+            JenaBeanExtensionTool jbe = new JenaBeanExtensionTool();
+
+			/* load the ontology header from a packageName */
+            //jbe.loadStatements(new FileInputStream("ontologyHeader.rdf.xml"), Syntax.RDF_XML_ABBREV);
+            /* load and transform the OOM */
+
+
+            jbe.loadOOM(resList, false);
+
+			/* get the ontology document in RDF/XML */
+
+            PrintStream out = new PrintStream(System.out);
+            jbe.writeOntologyDocument(out, Syntax.RDF_XML);
+            out.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
