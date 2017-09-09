@@ -81,6 +81,7 @@ public class HDF5Read {
                 browseFile(group, tmp);
 
             }
+            //todo how to deal with binary data?
             if (member instanceof Dataset) {
                 Dataset dataset = (Dataset) member;
                 edu.berkeley.nwb2semantic.data.Dataset tmp = new edu.berkeley.nwb2semantic.data.Dataset();
