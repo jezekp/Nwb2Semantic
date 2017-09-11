@@ -12,6 +12,7 @@ public class Dataset {
 
     private List<Attribute> attributes = new LinkedList<Attribute>();
     private String name;
+    private Object data;
 
     public List<Attribute> getAttributes() {
         return attributes;
@@ -27,5 +28,13 @@ public class Dataset {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

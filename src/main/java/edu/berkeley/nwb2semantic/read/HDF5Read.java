@@ -23,6 +23,7 @@ import ncsa.hdf.object.h5.H5File;
 import ncsa.hdf.object.h5.H5Group;
 import ncsa.hdf.object.h5.H5ScalarDS;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,6 +87,20 @@ public class HDF5Read {
                 Dataset dataset = (Dataset) member;
                 edu.berkeley.nwb2semantic.data.Dataset tmp = new edu.berkeley.nwb2semantic.data.Dataset();
                 tmp.setName(dataset.getName());
+                tmp.setAttributes(createMetadata(dataset.getMetadata()));
+   //             dataset.setConvertByteToString(true);
+                //tmp.setData(dataset.getData());
+                int datasetId = dataset.open();
+                long[] dimes = dataset.getDims();
+               // System.out.println(dataset.getFullName() + ": " + Arrays.toString(dataset.getDims())  + " " + Arrays.toString(dataset.getDimNames()));
+               // System.out.println(dataset.getDatatype().getDatatypeClass());
+                if(dimes.length > 0 && dimes[0] > 0) {
+                    tmp.setData(dataset.getData());
+                }
+//dataset.setConvertByteToString(true);
+//System.out.println(dataset.read());
+                dataset.close(datasetId);
+                //dataset.read();
                 outGroup.getDatasets().add(tmp);
 
 
@@ -98,6 +113,7 @@ public class HDF5Read {
         for (Attribute item : attributes) {
             edu.berkeley.nwb2semantic.data.Attribute tmp = new edu.berkeley.nwb2semantic.data.Attribute();
             tmp.setName(item.getName());
+            tmp.setValue(item.toString(","));
             res.add(tmp);
         }
         return res;

@@ -31,10 +31,6 @@ public class Main {
 
             JenaBeanExtensionTool jbe = new JenaBeanExtensionTool();
 
-			/* load the ontology header from a packageName */
-            //jbe.loadStatements(new FileInputStream("ontologyHeader.rdf.xml"), Syntax.RDF_XML_ABBREV);
-            /* load and transform the OOM */
-
 
             jbe.loadOOM(resList, false);
 

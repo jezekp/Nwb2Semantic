@@ -8,6 +8,7 @@ package edu.berkeley.nwb2semantic.data;
 public class Attribute {
 
     private String name;
+    private String value;
 
     public String getName() {
         return name;
@@ -15,5 +16,13 @@ public class Attribute {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
