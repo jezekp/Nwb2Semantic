@@ -5,6 +5,7 @@ import ncsa.hdf.object.Group;
 import tools.JenaBeanExtensionTool;
 import tools.Syntax;
 
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class Main {
 
 			/* get the ontology document in RDF/XML */
 
-            PrintStream out = new PrintStream(System.out);
+            PrintStream out = new PrintStream(new FileOutputStream("/tmp/out.nwb.xml.rdf"));
             jbe.writeOntologyDocument(out, Syntax.RDF_XML);
             out.close();
 

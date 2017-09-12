@@ -14,15 +14,13 @@
 
 package edu.berkeley.nwb2semantic.read;
 
-import edu.berkeley.nwb2semantic.data.*;
 import ncsa.hdf.object.*;
 import ncsa.hdf.object.Attribute;
 import ncsa.hdf.object.Dataset;
 import ncsa.hdf.object.Group;
-import ncsa.hdf.object.h5.H5File;
-import ncsa.hdf.object.h5.H5Group;
-import ncsa.hdf.object.h5.H5ScalarDS;
+import org.openjena.atlas.lib.ArrayUtils;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,21 +86,26 @@ public class HDF5Read {
                 edu.berkeley.nwb2semantic.data.Dataset tmp = new edu.berkeley.nwb2semantic.data.Dataset();
                 tmp.setName(dataset.getName());
                 tmp.setAttributes(createMetadata(dataset.getMetadata()));
-   //             dataset.setConvertByteToString(true);
+                //             dataset.setConvertByteToString(true);
                 //tmp.setData(dataset.getData());
                 int datasetId = dataset.open();
                 long[] dimes = dataset.getDims();
-               // System.out.println(dataset.getFullName() + ": " + Arrays.toString(dataset.getDims())  + " " + Arrays.toString(dataset.getDimNames()));
-               // System.out.println(dataset.getDatatype().getDatatypeClass());
-                if(dimes.length > 0 && dimes[0] > 0) {
-                    tmp.setData(dataset.getData());
+                // System.out.println(dataset.getFullName() + ": " + Arrays.toString(dataset.getDims())  + " " + Arrays.toString(dataset.getDimNames()));
+                // System.out.println(dataset.getDatatype().getDatatypeClass());
+                if (dimes.length == 1 && dimes[0] > 0) {
+                    if (dimes[0] < 20) {
+                        Object o = dataset.read();
+                        tmp.setData(o);
+                    }
                 }
+
+
 //dataset.setConvertByteToString(true);
 //System.out.println(dataset.read());
                 dataset.close(datasetId);
                 //dataset.read();
                 outGroup.getDatasets().add(tmp);
-
+                // String[] stringArray = Arrays.copyOf(objectArray, objectArray.length, String[].class);
 
             }
         }
