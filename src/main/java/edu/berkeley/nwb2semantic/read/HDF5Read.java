@@ -92,11 +92,11 @@ public class HDF5Read {
                 long[] dimes = dataset.getDims();
                 // System.out.println(dataset.getFullName() + ": " + Arrays.toString(dataset.getDims())  + " " + Arrays.toString(dataset.getDimNames()));
                 // System.out.println(dataset.getDatatype().getDatatypeClass());
-                if (dimes.length == 1 && dimes[0] > 0) {
-                    if (dimes[0] < 20) {
-                        Object o = dataset.read();
-                        tmp.setData(o);
-                    }
+                if (dimes.length == 1 && dimes[0] > 0 && dimes[0] < 20) {
+
+                    Object o = dataset.read();
+                    tmp.setData(o);
+
                 }
 
 
